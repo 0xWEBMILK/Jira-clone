@@ -2,7 +2,8 @@ from app.models.models import User
 from datetime import datetime, timedelta, UTC
 from jose import jwt
 
-class HashingInterface:
+
+class HasherInterface:
     def __init__(self, hasher):
         self.hasher = hasher
 
@@ -28,4 +29,6 @@ class JWTHasher:
         return encoded
 
     def decode(self, token):
-        return jwt.decode(token, self.key, self.alg)
+        decoded = jwt.decode(token, self.key, self.alg)
+
+        return User(**decoded)
