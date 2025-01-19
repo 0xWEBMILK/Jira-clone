@@ -8,10 +8,10 @@ class HasherInterface:
     def __init__(self, hasher):
         self.hasher = hasher
 
-    def encode(self, user: User) -> str:
-        return self.hasher.encode(user)
+    def encode(self, value):
+        return self.hasher.encode(value)
 
-    def decode(self, token) -> str:
+    def decode(self, token):
         return self.hasher.decode(token)
 
 
@@ -32,4 +32,4 @@ class JWTHasher:
     def decode(self, token):
         decoded = jwt.decode(token, self.key, self.alg)
 
-        return User(**decoded)
+        return decoded
