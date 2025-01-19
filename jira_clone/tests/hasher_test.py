@@ -2,8 +2,8 @@ import pytest
 import re
 
 
-from app.auth.hashing import HasherInterface, JWTHasher
-from app.models.models import User
+from jira_clone.app.auth.hashing import HasherInterface, JWTHasher
+from jira_clone.app.models.models import User
 
 
 def test_hasher_encode():

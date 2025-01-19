@@ -1,4 +1,5 @@
-from app.models.models import User
+from jira_clone.app.models.models import User
+
 from datetime import datetime, timedelta, UTC
 from jose import jwt
 
