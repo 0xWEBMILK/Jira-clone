@@ -1,5 +1,3 @@
-from jira_clone.app.models.models import User
-
 from datetime import datetime, timedelta, UTC
 from jose import jwt
 
@@ -20,8 +18,8 @@ class JWTHasher:
         self.key = key
         self.alg = alg
 
-    def encode(self, user: User):
-        to_encode = user.model_dump()
+    def encode(self, value):
+        to_encode = value.model_dump()
         expire_date = datetime.now(UTC) + timedelta(minutes=30)
 
         to_encode['exp'] = expire_date
