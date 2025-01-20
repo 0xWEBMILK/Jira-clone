@@ -1,17 +1,27 @@
-from pydantic import BaseModel, EmailStr
+from jira_clone.app.database.database import Base
+from sqlalchemy.orm import Mapped, mapped_column
 
-class User(BaseModel):
-    first_name: str
-    last_name: str
 
-    username: str
-    password: str
-    email: EmailStr
+class UserModel(Base):
+    __tablename__ = 'users'
 
-class Task(BaseModel):
-    title: str
-    description: str
+    id: Mapped[int] = mapped_column(primary_key=True)
+    token: Mapped[str] = mapped_column(unique=True, nullable=False)
 
-    creator: str
-    performers: list
-    tags: list
+class TaskModel(Base):
+    __tablename__ = 'tasks'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    token: Mapped[str] = mapped_column(unique=True, nullable=False)
+
+class TagModel(Base):
+    __tablename__ = 'tags'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    token: Mapped[str] = mapped_column(unique=True, nullable=False)
+
+class CategoryModel(Base):
+    __tablename__ = 'categories'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    token: Mapped[str] = mapped_column(unique=True, nullable=False)
