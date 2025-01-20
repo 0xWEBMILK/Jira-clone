@@ -2,12 +2,19 @@ import pytest
 import re
 
 
-from jira_clone.app.auth.hashing import HasherInterface, JWTHasher
-from jira_clone.app.models.models import User, Task
+from jira_clone.app.auth.hashing import (HasherInterface,
+                                         JWTHasher)
+
+from jira_clone.app.schemas.schemas import (ColorsEnum,
+                                            UserSchema,
+                                            TagSchema,
+                                            CategorySchema,
+                                            TaskSchema)
+
 
 # User
 def test_user_encode():
-    test_user = User(
+    test_user = UserSchema(
         first_name='John',
         last_name='Doe',
 
@@ -24,7 +31,7 @@ def test_user_encode():
     assert re.fullmatch(r"^[A-Za-z0-9-_]+(.[A-Za-z0-9-_]+){2}$", encoded)
 
 def test_user_decode():
-    test_user = User(
+    test_user = UserSchema(
         first_name='John',
         last_name='Doe',
 
@@ -37,13 +44,13 @@ def test_user_decode():
     jwt_hasher_interface = HasherInterface(jwt_hasher)
 
     encoded = jwt_hasher_interface.encode(test_user)
-    decoded = User(**jwt_hasher_interface.decode(encoded))
+    decoded = UserSchema(**jwt_hasher_interface.decode(encoded))
 
     assert decoded == test_user
 
-# Task
+
 def test_task_encode():
-    test_task = Task(
+    test_task = TaskSchema(
         title="Test Task Title",
         description="Test Description",
 
@@ -60,7 +67,7 @@ def test_task_encode():
     assert re.fullmatch(r"^[A-Za-z0-9-_]+(.[A-Za-z0-9-_]+){2}$", encoded)
 
 def test_task_decode():
-    test_task = Task(
+    test_task = TaskSchema(
         title="Test Task Title",
         description="Test Description",
 
@@ -73,6 +80,60 @@ def test_task_decode():
     jwt_hasher_interface = HasherInterface(jwt_hasher)
 
     encoded = jwt_hasher_interface.encode(test_task)
-    decoded = Task(**jwt_hasher_interface.decode(encoded))
+    decoded = TaskSchema(**jwt_hasher_interface.decode(encoded))
 
     assert decoded == test_task
+
+def test_tag_encode():
+    test_tag = TagSchema(
+        name="Test Tag Title",
+        color=ColorsEnum.RED
+    )
+
+    jwt_hasher = JWTHasher(key='super_key', alg='HS256')
+    jwt_hasher_interface = HasherInterface(jwt_hasher)
+
+    encoded = jwt_hasher_interface.encode(test_tag)
+
+    assert re.fullmatch(r"^[A-Za-z0-9-_]+(.[A-Za-z0-9-_]+){2}$", encoded)
+
+def test_tag_decode():
+    test_tag = TagSchema(
+        name="Test Tag Title",
+        color=ColorsEnum.RED
+    )
+
+    jwt_hasher = JWTHasher(key='super_key', alg='HS256')
+    jwt_hasher_interface = HasherInterface(jwt_hasher)
+
+    encoded = jwt_hasher_interface.encode(test_tag)
+    decoded = TagSchema(**jwt_hasher_interface.decode(encoded))
+
+    assert decoded == test_tag
+
+def test_category_encode():
+    test_category = CategorySchema(
+        name="Test Category Title",
+        color=ColorsEnum.RED
+    )
+
+    jwt_hasher = JWTHasher(key='super_key', alg='HS256')
+    jwt_hasher_interface = HasherInterface(jwt_hasher)
+
+    encoded = jwt_hasher_interface.encode(test_category)
+
+    assert re.fullmatch(r"^[A-Za-z0-9-_]+(.[A-Za-z0-9-_]+){2}$", encoded)
+
+def test_category_decode():
+    test_category = CategorySchema(
+        name="Test Category Title",
+        color=ColorsEnum.RED
+    )
+
+    jwt_hasher = JWTHasher(key='super_key', alg='HS256')
+    jwt_hasher_interface = HasherInterface(jwt_hasher)
+
+    encoded = jwt_hasher_interface.encode(test_category)
+    decoded = CategorySchema(**jwt_hasher_interface.decode(encoded))
+
+    assert decoded == test_category
