@@ -1,18 +1,27 @@
+from jira_clone.app.models.models import UserModel
+from sqlalchemy.orm import Session
+
 class UserRepository:
-    def __init__(self, session):
+    def __init__(self, session: Session):
         self.session = session
 
-    def add_user(self, token: str):
-        self.session.add('users', token)
+    def create_user(self, token: str):
+        if self.get_user_by_token(token) is None:
+            new_user = UserModel(token=token)
+            self.session.add(new_user)
+            self.session.commit()
 
     def remove_user(self, token: str):
-        self.session.remove('users', token)
+        user = self.get_user_by_token(token)
+        if user is not None:
+            self.session.delete(user)
+            self.session.commit()
 
     def update_user(self, old_token: str, new_token: str):
-        if self.get_user_by_token(old_token):
-            self.session.update('users', old_token, new_token)
+        user = self.get_user_by_token(old_token)
+        if user:
+            user.token = new_token
+            self.session.commit()
 
     def get_user_by_token(self, token: str):
-        for item in self.session.all()['users']:
-            if item == token:
-                return item
+        return self.session.query(UserModel).filter_by(token=token).first()
