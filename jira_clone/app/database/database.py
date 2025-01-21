@@ -1,4 +1,4 @@
-from jira_clone.app.models import Base
+from ..models import Base
 
 def init(engine):
     Base.metadata.create_all(engine)
