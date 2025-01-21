@@ -1,5 +1,7 @@
-from jira_clone.app.database.database import Base
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, declarative_base
+
+
+Base = declarative_base()
 
 
 class UserModel(Base):
