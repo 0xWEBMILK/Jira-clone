@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from jira_clone.app.models.models import CategoryModel
+from ..models import CategoryModel
 
 class CategoryRepository:
     def __init__(self, session: Session):

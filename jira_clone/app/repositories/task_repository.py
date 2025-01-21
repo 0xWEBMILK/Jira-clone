@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from jira_clone.app.models.models import TaskModel
+from ..models import TaskModel
 
 class TaskRepository:
     def __init__(self, session: Session):

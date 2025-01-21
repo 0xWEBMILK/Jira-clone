@@ -1,6 +1,5 @@
-from jira_clone.app.models.models import TagModel
 from sqlalchemy.orm import Session
-
+from ..models import TagModel
 
 class TagRepository:
     def __init__(self, session: Session):

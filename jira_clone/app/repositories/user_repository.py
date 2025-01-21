@@ -1,5 +1,5 @@
-from jira_clone.app.models.models import UserModel
 from sqlalchemy.orm import Session
+from ..models import UserModel
 
 class UserRepository:
     def __init__(self, session: Session):
