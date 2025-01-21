@@ -25,3 +25,6 @@ class UserRepository:
 
     def get_user_by_token(self, token: str):
         return self.session.query(UserModel).filter_by(token=token).first()
+
+    def get_all_users(self):
+        return self.session.query(UserModel).all()

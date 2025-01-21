@@ -25,3 +25,6 @@ class CategoryRepository:
 
     def get_category_by_token(self, token: str):
         return self.session.query(CategoryModel).filter_by(token=token).first()
+
+    def get_all_categories(self):
+        return self.session.query(CategoryModel).all()

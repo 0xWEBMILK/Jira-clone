@@ -25,3 +25,6 @@ class TaskRepository:
 
     def get_task_by_token(self, token: str):
         return self.session.query(TaskModel).filter_by(token=token).first()
+
+    def get_all_tasks(self):
+        return self.session.query(TaskModel).all()

@@ -26,3 +26,6 @@ class TagRepository:
 
     def get_tag_by_token(self, token: str):
         return self.session.query(TagModel).filter_by(token=token).first()
+
+    def get_all_tags(self):
+        return self.session.query(TagModel).all()
