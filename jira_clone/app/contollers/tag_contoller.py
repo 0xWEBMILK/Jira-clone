@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from ..schemas import TagSchema
 from ..interactors.tag_interactor import TagInteractor
@@ -26,7 +26,7 @@ async def get_tag_by_token(tag_token, session = Depends(get_session_stub), hashe
 
     tag = tag_interactor.get_tag_by_token(tag_token)
 
-    return tag
+    return tag if tag != 404 else HTTPException(status_code=404)
 
 @tag_router.post('/')
 async def create_tag(tag_schema: TagSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
@@ -44,7 +44,7 @@ async def update_tag(old_tag_schema: TagSchema, new_tag_schema: TagSchema, sessi
 
     tag = tag_interactor.update_tag(old_tag_schema, new_tag_schema)
 
-    return tag
+    return tag if tag != 404 else HTTPException(status_code=404)
 
 @tag_router.delete('/')
 async def delete_tag(tag_schema: TagSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
@@ -53,4 +53,4 @@ async def delete_tag(tag_schema: TagSchema, session = Depends(get_session_stub),
 
     tag = tag_interactor.remove_tag(tag_schema)
 
-    return tag
+    return tag if tag != 404 else HTTPException(status_code=404)

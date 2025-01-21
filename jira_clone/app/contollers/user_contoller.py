@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from ..schemas import UserSchema
 from ..interactors.user_interactor import UserInteractor
@@ -26,7 +26,7 @@ async def get_user_by_token(user_token, session = Depends(get_session_stub), has
 
     user = user_interactor.get_user_by_token(user_token)
 
-    return user
+    return user if user != 404 else HTTPException(status_code=404)
 
 @user_router.post('/')
 async def create_user(user_schema: UserSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
@@ -44,7 +44,7 @@ async def update_user(old_user_schema: UserSchema, new_user_schema: UserSchema, 
 
     user = user_interactor.update_user(old_user_schema, new_user_schema)
 
-    return user
+    return user if user != 404 else HTTPException(status_code=404)
 
 @user_router.delete('/')
 async def delete_user(user_schema: UserSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
@@ -53,4 +53,4 @@ async def delete_user(user_schema: UserSchema, session = Depends(get_session_stu
 
     user = user_interactor.remove_user(user_schema)
 
-    return user
+    return user if user != 404 else HTTPException(status_code=404)

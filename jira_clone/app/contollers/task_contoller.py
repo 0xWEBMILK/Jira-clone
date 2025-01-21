@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from ..schemas import TaskSchema
 from ..interactors.task_interactor import TaskInteractor
@@ -26,7 +26,7 @@ async def get_task_by_token(task_token, session = Depends(get_session_stub), has
 
     task = task_interactor.get_task_by_token(task_token)
 
-    return task
+    return task if task != 404 else HTTPException(status_code=404)
 
 @task_router.post('/')
 async def create_task(task_schema: TaskSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
@@ -44,7 +44,7 @@ async def update_task(old_task_schema: TaskSchema, new_task_schema: TaskSchema, 
 
     task = task_interactor.update_task(old_task_schema, new_task_schema)
 
-    return task
+    return task if task != 404 else HTTPException(status_code=404)
 
 @task_router.delete('/')
 async def delete_task(task_schema: TaskSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
@@ -53,4 +53,4 @@ async def delete_task(task_schema: TaskSchema, session = Depends(get_session_stu
 
     task = task_interactor.remove_task(task_schema)
 
-    return task
+    return task if task != 404 else HTTPException(status_code=404)

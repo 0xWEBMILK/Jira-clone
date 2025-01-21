@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from ..schemas import CategorySchema
 from ..interactors import CategoryInteractor
@@ -27,7 +27,7 @@ async def get_category_by_token(category_token, session = Depends(get_session_st
 
     category = category_interactor.get_category_by_token(category_token)
 
-    return category
+    return category if category != 404 else HTTPException(status_code=404)
 
 @category_router.post('/')
 async def create_category(category_schema: CategorySchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
@@ -45,7 +45,7 @@ async def update_category(old_category_schema: CategorySchema, new_category_sche
 
     category = category_interactor.update_category(old_category_schema, new_category_schema)
 
-    return category
+    return category if category != 404 else HTTPException(status_code=404)
 
 @category_router.delete('/')
 async def delete_category(category_schema: CategorySchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
@@ -54,4 +54,4 @@ async def delete_category(category_schema: CategorySchema, session = Depends(get
 
     category = category_interactor.remove_category(category_schema)
 
-    return category
+    return category if category != 404 else HTTPException(status_code=404)
