@@ -19,24 +19,35 @@ class CategoryInteractor:
 
             return category
 
+        return 404
+
     def create_category(self, category_schema: CategorySchema):
         token = self.hasher.encode(category_schema)
 
-        self.repository.create_category(token)
+        if self.repository.get_category_by_token(token):
+            self.repository.create_category(token)
 
-        return token
+            return token
+
+        return 404
 
     def remove_category(self, category_schema: CategorySchema):
         token = self.hasher.encode(category_schema)
 
-        self.repository.remove_category(token)
+        if self.repository.get_category_by_token(token):
+            self.repository.remove_category(token)
 
-        return token
+            return token
+
+        return 404
 
     def update_category(self, old_category_schema: CategorySchema, new_category_schema: CategorySchema):
         old_token = self.hasher.encode(old_category_schema)
         new_token = self.hasher.encode(new_category_schema)
 
-        self.repository.update_category(old_token, new_token)
+        if self.repository.get_category_by_token(old_token):
+            self.repository.update_category(old_token, new_token)
 
-        return new_token
+            return new_token
+
+        return 404

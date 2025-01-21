@@ -19,24 +19,35 @@ class UserInteractor:
 
             return user
 
+        return 404
+
     def create_user(self, user_schema: UserSchema):
         token = self.hasher.encode(user_schema)
 
-        self.repository.create_user(token)
+        if self.repository.get_user_by_token(token):
+            self.repository.create_user(token)
 
-        return token
+            return token
+
+        return 404
 
     def remove_user(self, user_schema: UserSchema):
         token = self.hasher.encode(user_schema)
 
-        self.repository.remove_user(token)
+        if self.repository.get_user_by_token(token):
+            self.repository.remove_user(token)
 
-        return token
+            return token
+
+        return 404
 
     def update_user(self, old_user_schema: UserSchema, new_user_schema: UserSchema):
         old_token = self.hasher.encode(old_user_schema)
         new_token = self.hasher.encode(new_user_schema)
 
-        self.repository.update_user(old_token, new_token)
+        if self.repository.get_user_by_token(old_token):
+            self.repository.update_user(old_token, new_token)
 
-        return new_token
+            return new_token
+
+        return 404

@@ -19,24 +19,35 @@ class TagInteractor:
 
             return tag
 
+        return 404
+
     def create_tag(self, tag_schema: TagSchema):
         token = self.hasher.encode(tag_schema)
 
-        self.repository.create_tag(token)
+        if self.repository.get_tag_by_token(token):
+            self.repository.create_tag(token)
 
-        return token
+            return token
+
+        return 404
 
     def remove_tag(self, tag_schema: TagSchema):
         token = self.hasher.encode(tag_schema)
 
-        self.repository.remove_tag(token)
+        if self.repository.get_tag_by_token(token):
+            self.repository.remove_tag(token)
 
-        return token
+            return token
+
+        return 404
 
     def update_tag(self, old_tag_schema: TagSchema, new_tag_schema: TagSchema):
         old_token = self.hasher.encode(old_tag_schema)
         new_token = self.hasher.encode(new_tag_schema)
 
-        self.repository.update_tag(old_token, new_token)
+        if self.repository.get_tag_by_token(old_token):
+            self.repository.update_tag(old_token, new_token)
 
-        return new_token
+            return new_token
+
+        return 404
