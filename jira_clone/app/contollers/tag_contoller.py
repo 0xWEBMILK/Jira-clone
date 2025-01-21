@@ -1,15 +1,16 @@
 from fastapi import APIRouter, Depends
 
-from jira_clone.app.schemas import TagSchema
-from jira_clone.app.database.database import get_session_stub
-from jira_clone.app.auth.hashing import get_hasher_stub
-from jira_clone.app.interactors.tag_interactor import TagInteractor
-from jira_clone.app.repositories.tag_repository import TagRepository
+from ..schemas import TagSchema
+from ..interactors.tag_interactor import TagInteractor
+from ..repositories.tag_repository import TagRepository
+
+from ..database import get_session_stub
+from ..auth import get_hasher_stub
 
 tag_router = APIRouter(prefix='/tags')
 
 
-@tag_router.get('/all')
+@tag_router.get('/')
 async def get_all_tags(session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     tag_repository = TagRepository(session)
     tag_interactor = TagInteractor(tag_repository, hasher)
@@ -18,7 +19,7 @@ async def get_all_tags(session = Depends(get_session_stub), hasher = Depends(get
 
     return tags
 
-@tag_router.get('/find')
+@tag_router.get('/{category_token}')
 async def get_tag_by_token(tag_token, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     tag_repository = TagRepository(session)
     tag_interactor = TagInteractor(tag_repository, hasher)
@@ -27,7 +28,7 @@ async def get_tag_by_token(tag_token, session = Depends(get_session_stub), hashe
 
     return tag
 
-@tag_router.post('/create')
+@tag_router.post('/')
 async def create_tag(tag_schema: TagSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     tag_repository = TagRepository(session)
     tag_interactor = TagInteractor(tag_repository, hasher)
@@ -36,7 +37,7 @@ async def create_tag(tag_schema: TagSchema, session = Depends(get_session_stub),
 
     return tag
 
-@tag_router.put('/update')
+@tag_router.put('/')
 async def update_tag(old_tag_schema: TagSchema, new_tag_schema: TagSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     tag_repository = TagRepository(session)
     tag_interactor = TagInteractor(tag_repository, hasher)
@@ -45,7 +46,7 @@ async def update_tag(old_tag_schema: TagSchema, new_tag_schema: TagSchema, sessi
 
     return tag
 
-@tag_router.delete('/delete')
+@tag_router.delete('/')
 async def delete_tag(tag_schema: TagSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     tag_repository = TagRepository(session)
     tag_interactor = TagInteractor(tag_repository, hasher)

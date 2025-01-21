@@ -1,15 +1,16 @@
 from fastapi import APIRouter, Depends
 
-from jira_clone.app.schemas import TaskSchema
-from jira_clone.app.database.database import get_session_stub
-from jira_clone.app.auth.hashing import get_hasher_stub
-from jira_clone.app.interactors.task_interactor import TaskInteractor
-from jira_clone.app.repositories.task_repository import TaskRepository
+from ..schemas import TaskSchema
+from ..interactors.task_interactor import TaskInteractor
+from ..repositories.task_repository import TaskRepository
+
+from ..database import get_session_stub
+from ..auth import get_hasher_stub
 
 task_router = APIRouter(prefix='/tasks')
 
 
-@task_router.get('/all')
+@task_router.get('/')
 async def get_all_tasks(session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     task_repository = TaskRepository(session)
     task_interactor = TaskInteractor(task_repository, hasher)
@@ -18,7 +19,7 @@ async def get_all_tasks(session = Depends(get_session_stub), hasher = Depends(ge
 
     return tasks
 
-@task_router.get('/find')
+@task_router.get('/{category_token}')
 async def get_task_by_token(task_token, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     task_repository = TaskRepository(session)
     task_interactor = TaskInteractor(task_repository, hasher)
@@ -27,7 +28,7 @@ async def get_task_by_token(task_token, session = Depends(get_session_stub), has
 
     return task
 
-@task_router.post('/create')
+@task_router.post('/')
 async def create_task(task_schema: TaskSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     task_repository = TaskRepository(session)
     task_interactor = TaskInteractor(task_repository, hasher)
@@ -36,7 +37,7 @@ async def create_task(task_schema: TaskSchema, session = Depends(get_session_stu
 
     return task
 
-@task_router.put('/update')
+@task_router.put('/')
 async def update_task(old_task_schema: TaskSchema, new_task_schema: TaskSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     task_repository = TaskRepository(session)
     task_interactor = TaskInteractor(task_repository, hasher)
@@ -45,7 +46,7 @@ async def update_task(old_task_schema: TaskSchema, new_task_schema: TaskSchema, 
 
     return task
 
-@task_router.delete('/delete')
+@task_router.delete('/')
 async def delete_task(task_schema: TaskSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     task_repository = TaskRepository(session)
     task_interactor = TaskInteractor(task_repository, hasher)

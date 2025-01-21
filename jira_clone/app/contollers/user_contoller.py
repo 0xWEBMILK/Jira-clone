@@ -1,15 +1,16 @@
 from fastapi import APIRouter, Depends
 
-from jira_clone.app.schemas import UserSchema
-from jira_clone.app.database.database import get_session_stub
-from jira_clone.app.auth.hashing import get_hasher_stub
-from jira_clone.app.interactors.user_interactor import UserInteractor
-from jira_clone.app.repositories.user_repository import UserRepository
+from ..schemas import UserSchema
+from ..interactors.user_interactor import UserInteractor
+from ..repositories.user_repository import UserRepository
+
+from ..database import get_session_stub
+from ..auth import get_hasher_stub
 
 user_router = APIRouter(prefix='/users')
 
 
-@user_router.get('/all')
+@user_router.get('/')
 async def get_all_users(session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     user_repository = UserRepository(session)
     user_interactor = UserInteractor(user_repository, hasher)
@@ -18,7 +19,7 @@ async def get_all_users(session = Depends(get_session_stub), hasher = Depends(ge
 
     return users
 
-@user_router.get('/find')
+@user_router.get('/{category_token}')
 async def get_user_by_token(user_token, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     user_repository = UserRepository(session)
     user_interactor = UserInteractor(user_repository, hasher)
@@ -27,7 +28,7 @@ async def get_user_by_token(user_token, session = Depends(get_session_stub), has
 
     return user
 
-@user_router.post('/create')
+@user_router.post('/')
 async def create_user(user_schema: UserSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     user_repository = UserRepository(session)
     user_interactor = UserInteractor(user_repository, hasher)
@@ -36,7 +37,7 @@ async def create_user(user_schema: UserSchema, session = Depends(get_session_stu
 
     return user
 
-@user_router.put('/update')
+@user_router.put('/')
 async def update_user(old_user_schema: UserSchema, new_user_schema: UserSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     user_repository = UserRepository(session)
     user_interactor = UserInteractor(user_repository, hasher)
@@ -45,7 +46,7 @@ async def update_user(old_user_schema: UserSchema, new_user_schema: UserSchema, 
 
     return user
 
-@user_router.delete('/delete')
+@user_router.delete('/')
 async def delete_user(user_schema: UserSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     user_repository = UserRepository(session)
     user_interactor = UserInteractor(user_repository, hasher)
