@@ -20,9 +20,6 @@ class JWTHasher:
 
     def encode(self, value):
         to_encode = value.model_dump()
-        expire_date = datetime.now(UTC) + timedelta(minutes=30)
-
-        to_encode['exp'] = expire_date
 
         encoded = jwt.encode(to_encode, self.key, self.alg)
         return encoded
