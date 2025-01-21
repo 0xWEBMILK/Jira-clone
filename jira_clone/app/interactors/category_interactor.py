@@ -1,4 +1,4 @@
-from jira_clone.app.schemas.schemas import CategorySchema
+from ..schemas import CategorySchema
 
 
 class CategoryInteractor:

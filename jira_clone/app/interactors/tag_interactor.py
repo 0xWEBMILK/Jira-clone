@@ -1,4 +1,4 @@
-from jira_clone.app.schemas.schemas import TagSchema
+from ..schemas import TagSchema
 
 
 class TagInteractor:

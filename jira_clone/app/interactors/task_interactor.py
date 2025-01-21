@@ -1,4 +1,4 @@
-from jira_clone.app.schemas.schemas import TaskSchema
+from ..schemas import TaskSchema
 
 
 class TaskInteractor:

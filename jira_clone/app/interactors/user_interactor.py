@@ -1,4 +1,4 @@
-from jira_clone.app.schemas.schemas import UserSchema
+from ..schemas import UserSchema
 
 
 class UserInteractor:
