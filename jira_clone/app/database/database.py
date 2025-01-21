@@ -1,6 +1,7 @@
-from sqlalchemy.orm import declarative_base
+from jira_clone.app.models import Base
 
-Base = declarative_base()
+def init(engine):
+    Base.metadata.create_all(engine)
 
 def get_session_stub():
     pass
