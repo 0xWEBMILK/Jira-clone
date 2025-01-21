@@ -1,5 +1,7 @@
 from jose import jwt
 
+def get_hasher_stub():
+    pass
 
 class HasherInterface:
     def __init__(self, hasher):
