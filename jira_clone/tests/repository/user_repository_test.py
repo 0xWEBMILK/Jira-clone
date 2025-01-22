@@ -5,10 +5,9 @@ from jira_clone.app.database.database import Base
 from jira_clone.app.repositories.user_repository import UserRepository
 from jira_clone.app.schemas.schemas import UserSchema
 
-from jira_clone.app.auth.hashing import HasherInterface, JWTHasher
+from jira_clone.app.auth.hashing import JWTHasher
 
 jwt_hasher = JWTHasher('super', 'HS256')
-jwt_hasher_interface = HasherInterface(jwt_hasher)
 
 engine = create_engine('sqlite:///test.db')
 session = sessionmaker(bind=engine)
@@ -34,7 +33,7 @@ def test_create_user():
         email="someemail@email.com",
     )
 
-    token = jwt_hasher_interface.encode(test_user_schema)
+    token = jwt_hasher.encode(test_user_schema)
     user_repository = UserRepository(get_session())
     user_repository.create_user(token)
 
@@ -51,7 +50,7 @@ def test_remove_user():
         email="someemail@email.com",
     )
 
-    token = jwt_hasher_interface.encode(test_user_schema)
+    token = jwt_hasher.encode(test_user_schema)
     user_repository = UserRepository(get_session())
     user_repository.remove_user(token)
 
@@ -68,7 +67,7 @@ def test_update_user():
         email="someemail@email.com",
     )
 
-    old_token = jwt_hasher_interface.encode(test_user_schema)
+    old_token = jwt_hasher.encode(test_user_schema)
     user_repository = UserRepository(get_session())
 
     user_repository.create_user(old_token)
@@ -82,7 +81,7 @@ def test_update_user():
         email="someemail@email.com",
     )
 
-    new_token = jwt_hasher_interface.encode(test_user_schema)
+    new_token = jwt_hasher.encode(test_user_schema)
 
     user_repository.update_user(old_token, new_token)
 

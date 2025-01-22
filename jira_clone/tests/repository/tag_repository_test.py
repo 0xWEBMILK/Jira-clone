@@ -5,10 +5,9 @@ from jira_clone.app.database.database import Base
 from jira_clone.app.repositories.tag_repository import TagRepository
 from jira_clone.app.schemas.schemas import CategorySchema, ColorsEnum
 
-from jira_clone.app.auth.hashing import HasherInterface, JWTHasher
+from jira_clone.app.auth.hashing import JWTHasher
 
 jwt_hasher = JWTHasher('super', 'HS256')
-jwt_hasher_interface = HasherInterface(jwt_hasher)
 
 engine = create_engine('sqlite:///test.db')
 session = sessionmaker(bind=engine)
@@ -29,7 +28,7 @@ def test_create_tag():
         color=ColorsEnum.RED
     )
 
-    token = jwt_hasher_interface.encode(test_tag_schema)
+    token = jwt_hasher.encode(test_tag_schema)
     tag_repository = TagRepository(get_session())
     tag_repository.create_tag(token)
 
@@ -41,7 +40,7 @@ def test_remove_tag():
         color=ColorsEnum.RED
     )
 
-    token = jwt_hasher_interface.encode(test_tag_schema)
+    token = jwt_hasher.encode(test_tag_schema)
     tag_repository = TagRepository(get_session())
     tag_repository.remove_tag(token)
 
@@ -53,7 +52,7 @@ def test_update_tag():
         color=ColorsEnum.RED
     )
 
-    old_token = jwt_hasher_interface.encode(test_tag_schema)
+    old_token = jwt_hasher.encode(test_tag_schema)
     tag_repository = TagRepository(get_session())
 
     tag_repository.create_tag(old_token)
@@ -63,7 +62,7 @@ def test_update_tag():
         color=ColorsEnum.RED
     )
 
-    new_token = jwt_hasher_interface.encode(test_tag_schema)
+    new_token = jwt_hasher.encode(test_tag_schema)
 
     tag_repository.update_tag(old_token, new_token)
 

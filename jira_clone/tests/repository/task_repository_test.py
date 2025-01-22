@@ -5,10 +5,9 @@ from jira_clone.app.database.database import Base
 from jira_clone.app.repositories.task_repository import TaskRepository
 from jira_clone.app.schemas.schemas import TaskSchema
 
-from jira_clone.app.auth.hashing import HasherInterface, JWTHasher
+from jira_clone.app.auth.hashing import JWTHasher
 
 jwt_hasher = JWTHasher('super', 'HS256')
-jwt_hasher_interface = HasherInterface(jwt_hasher)
 
 engine = create_engine('sqlite:///test.db')
 session = sessionmaker(bind=engine)
@@ -33,7 +32,7 @@ def test_create_task():
         tags=["some_tag"],
     )
 
-    token = jwt_hasher_interface.encode(test_task_schema)
+    token = jwt_hasher.encode(test_task_schema)
     task_repository = TaskRepository(get_session())
     task_repository.create_task(token)
 
@@ -49,7 +48,7 @@ def test_remove_task():
         tags=["some_tag"],
     )
 
-    token = jwt_hasher_interface.encode(test_task_schema)
+    token = jwt_hasher.encode(test_task_schema)
     task_repository = TaskRepository(get_session())
     task_repository.remove_task(token)
 
@@ -65,7 +64,7 @@ def test_update_task():
         tags=["some_tag"],
     )
 
-    old_token = jwt_hasher_interface.encode(test_task_schema)
+    old_token = jwt_hasher.encode(test_task_schema)
     task_repository = TaskRepository(get_session())
 
     task_repository.create_task(old_token)
@@ -79,7 +78,7 @@ def test_update_task():
         tags=["some_tag"],
     )
 
-    new_token = jwt_hasher_interface.encode(test_task_schema)
+    new_token = jwt_hasher.encode(test_task_schema)
 
     task_repository.update_task(old_token, new_token)
 
