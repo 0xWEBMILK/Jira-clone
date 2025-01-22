@@ -5,10 +5,9 @@ from jira_clone.app.database.database import Base
 from jira_clone.app.repositories.category_repository import CategoryRepository
 from jira_clone.app.schemas.schemas import CategorySchema, ColorsEnum
 
-from jira_clone.app.auth.hashing import HasherInterface, JWTHasher
+from jira_clone.app.auth.hashing import JWTHasher
 
 jwt_hasher = JWTHasher('super', 'HS256')
-jwt_hasher_interface = HasherInterface(jwt_hasher)
 
 engine = create_engine('sqlite:///test.db')
 session = sessionmaker(bind=engine)
@@ -22,14 +21,13 @@ def get_session():
             conn.rollback()
             raise e
 
-
 def test_create_category():
     test_category_schema = CategorySchema(
         name="Some test category",
         color=ColorsEnum.RED
     )
 
-    token = jwt_hasher_interface.encode(test_category_schema)
+    token = jwt_hasher.encode(test_category_schema)
     category_repository = CategoryRepository(get_session())
     category_repository.create_category(token)
 
@@ -41,7 +39,7 @@ def test_remove_category():
         color=ColorsEnum.RED
     )
 
-    token = jwt_hasher_interface.encode(test_category_schema)
+    token = jwt_hasher.encode(test_category_schema)
     category_repository = CategoryRepository(get_session())
     category_repository.remove_category(token)
 
@@ -53,7 +51,7 @@ def test_update_category():
         color=ColorsEnum.RED
     )
 
-    old_token = jwt_hasher_interface.encode(test_category_schema)
+    old_token = jwt_hasher.encode(test_category_schema)
     category_repository = CategoryRepository(get_session())
 
     category_repository.create_category(old_token)
@@ -63,7 +61,7 @@ def test_update_category():
         color=ColorsEnum.RED
     )
 
-    new_token = jwt_hasher_interface.encode(test_category_schema)
+    new_token = jwt_hasher.encode(test_category_schema)
 
     category_repository.update_category(old_token, new_token)
 
