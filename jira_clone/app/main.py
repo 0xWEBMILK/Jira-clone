@@ -7,10 +7,10 @@ import uvicorn
 from .auth.hashing import get_hasher_stub, JWTHasher
 from .database.database import get_session_stub, init
 
-from .contollers import tag_router
-from .contollers import task_router
-from .contollers import user_router
-from .contollers import category_router
+from .controllers import tag_router
+from .controllers import task_router
+from .controllers import user_router
+from .controllers import category_router
 
 def main():
     app = FastAPI()
