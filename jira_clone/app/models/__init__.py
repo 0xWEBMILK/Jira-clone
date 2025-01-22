@@ -2,11 +2,12 @@ from .models import (UserModel,
                      TagModel,
                      CategoryModel,
                      TaskModel,
-                     Base)
+                     BaseModel)
 
 __all__ = [
     'UserModel',
     'TagModel',
     'CategoryModel',
-    'TaskModel'
+    'TaskModel',
+    'BaseModel'
 ]
