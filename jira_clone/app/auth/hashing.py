@@ -3,17 +3,6 @@ from jose import jwt
 def get_hasher_stub():
     pass
 
-class HasherInterface:
-    def __init__(self, hasher):
-        self.hasher = hasher
-
-    def encode(self, value):
-        return self.hasher.encode(value)
-
-    def decode(self, token):
-        return self.hasher.decode(token)
-
-
 class JWTHasher:
     def __init__(self, key, alg = 'HS256'):
         self.key = key
