@@ -1,4 +1,4 @@
-from ..models import Base
+from ..models.base_model import Base
 
 def init(engine):
     Base.metadata.create_all(engine)

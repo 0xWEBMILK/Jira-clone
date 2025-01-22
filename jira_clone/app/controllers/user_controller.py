@@ -8,23 +8,21 @@ from ..schemas import UserSchema
 
 user_router = APIRouter(prefix='/users', tags=['users'])
 
-
 @user_router.get('/')
-def create_user(user_schema: UserSchema, session=Depends(get_session_stub), hasher=Depends(get_hasher_stub)):
+def get_all_users(session=Depends(get_session_stub), hasher=Depends(get_hasher_stub)):
     user_repository = UserRepository(session)
     user_interactor = UserInteractor(user_repository, hasher)
 
-    result = user_interactor.create_user(user_schema)
+    result = user_interactor.get_all()
 
-    return result
-
+    return result if result is not None else HTTPException(status_code=404)
 
 @user_router.get('/{user_token}')
 def get_user_by_token(user_token: str, session=Depends(get_session_stub), hasher=Depends(get_hasher_stub)):
     user_repository = UserRepository(session)
     user_interactor = UserInteractor(user_repository, hasher)
 
-    result = user_interactor.get_user_by_token(user_token)
+    result = user_interactor.get_by_token(user_token)
 
     return result if result is not None else HTTPException(status_code=404)
 
@@ -34,18 +32,18 @@ def create_user(user_schema: UserSchema, session=Depends(get_session_stub), hash
     user_repository = UserRepository(session)
     user_interactor = UserInteractor(user_repository, hasher)
 
-    result = user_interactor.create_user(user_schema)
+    result = user_interactor.create(user_schema)
 
     return result if result is not None else HTTPException(status_code=404)
 
 
 @user_router.put('/')
-def update_user(old_user_schema: UserSchema, new_user_schema: UserSchema, session=Depends(get_session_stub),
+def update_user(old_schema: UserSchema, new_schema: UserSchema, session=Depends(get_session_stub),
                 hasher=Depends(get_hasher_stub)):
     user_repository = UserRepository(session)
     user_interactor = UserInteractor(user_repository, hasher)
 
-    result = user_interactor.update_user(old_user_schema, new_user_schema)
+    result = user_interactor.update(old_schema, new_schema)
 
     return result if result is not None else HTTPException(status_code=404)
 
@@ -55,6 +53,6 @@ def delete_user(user_schema: UserSchema, session=Depends(get_session_stub), hash
     user_repository = UserRepository(session)
     user_interactor = UserInteractor(user_repository, hasher)
 
-    result = user_interactor.remove_user(user_schema)
+    result = user_interactor.remove(user_schema)
 
     return result if result is not None else HTTPException(status_code=404)

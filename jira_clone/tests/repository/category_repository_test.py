@@ -21,48 +21,48 @@ def get_session():
             conn.rollback()
             raise e
 
-def test_create_category():
-    test_category_schema = CategorySchema(
+def test_create():
+    test_schema = CategorySchema(
         name="Some test category",
         color=ColorsEnum.RED
     )
 
-    token = jwt_hasher.encode(test_category_schema)
+    token = jwt_hasher.encode(test_schema)
     category_repository = CategoryRepository(get_session())
-    category_repository.create_category(token)
+    category_repository.create(token)
 
-    assert category_repository.get_category_by_token(token).token
+    assert category_repository.get_by_token(token).token
 
-def test_remove_category():
-    test_category_schema = CategorySchema(
+def test_remove():
+    test_schema = CategorySchema(
         name="Some test category",
         color=ColorsEnum.RED
     )
 
-    token = jwt_hasher.encode(test_category_schema)
+    token = jwt_hasher.encode(test_schema)
     category_repository = CategoryRepository(get_session())
-    category_repository.remove_category(token)
+    category_repository.remove(token)
 
-    assert category_repository.get_category_by_token(token) is None
+    assert category_repository.get_by_token(token) is None
 
-def test_update_category():
-    test_category_schema = CategorySchema(
+def test_update():
+    test_schema = CategorySchema(
         name="Some test category",
         color=ColorsEnum.RED
     )
 
-    old_token = jwt_hasher.encode(test_category_schema)
+    old_token = jwt_hasher.encode(test_schema)
     category_repository = CategoryRepository(get_session())
 
-    category_repository.create_category(old_token)
+    category_repository.create(old_token)
 
-    test_category_schema = CategorySchema(
+    test_schema = CategorySchema(
         name="Some test category123",
         color=ColorsEnum.RED
     )
 
-    new_token = jwt_hasher.encode(test_category_schema)
+    new_token = jwt_hasher.encode(test_schema)
 
-    category_repository.update_category(old_token, new_token)
+    category_repository.update(old_token, new_token)
 
-    assert category_repository.get_category_by_token(new_token).token == new_token
+    assert category_repository.get_by_token(new_token).token == new_token
