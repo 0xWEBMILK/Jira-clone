@@ -22,8 +22,8 @@ def get_session():
             raise e
 
 
-def test_create_task():
-    test_task_schema = TaskSchema(
+def test_create():
+    test_schema = TaskSchema(
         title="Some test task",
         description="Some test task description",
         
@@ -32,14 +32,14 @@ def test_create_task():
         tags=["some_tag"],
     )
 
-    token = jwt_hasher.encode(test_task_schema)
+    token = jwt_hasher.encode(test_schema)
     task_repository = TaskRepository(get_session())
-    task_repository.create_task(token)
+    task_repository.create(token)
 
-    assert task_repository.get_task_by_token(token).token
+    assert task_repository.get_by_token(token).token
 
-def test_remove_task():
-    test_task_schema = TaskSchema(
+def test_remove():
+    test_schema = TaskSchema(
         title="Some test task",
         description="Some test task description",
 
@@ -48,14 +48,14 @@ def test_remove_task():
         tags=["some_tag"],
     )
 
-    token = jwt_hasher.encode(test_task_schema)
+    token = jwt_hasher.encode(test_schema)
     task_repository = TaskRepository(get_session())
-    task_repository.remove_task(token)
+    task_repository.remove(token)
 
-    assert task_repository.get_task_by_token(token) is None
+    assert task_repository.get_by_token(token) is None
 
-def test_update_task():
-    test_task_schema = TaskSchema(
+def test_update():
+    test_schema = TaskSchema(
         title="Some test task",
         description="Some test task description",
 
@@ -64,12 +64,12 @@ def test_update_task():
         tags=["some_tag"],
     )
 
-    old_token = jwt_hasher.encode(test_task_schema)
+    old_token = jwt_hasher.encode(test_schema)
     task_repository = TaskRepository(get_session())
 
-    task_repository.create_task(old_token)
+    task_repository.create(old_token)
 
-    test_task_schema = TaskSchema(
+    test_schema = TaskSchema(
         title="Some test task123",
         description="Some test task description132",
 
@@ -78,8 +78,8 @@ def test_update_task():
         tags=["some_tag"],
     )
 
-    new_token = jwt_hasher.encode(test_task_schema)
+    new_token = jwt_hasher.encode(test_schema)
 
-    task_repository.update_task(old_token, new_token)
+    task_repository.update(old_token, new_token)
 
-    assert task_repository.get_task_by_token(new_token).token == new_token
+    assert task_repository.get_by_token(new_token).token == new_token

@@ -22,48 +22,48 @@ def get_session():
             raise e
 
 
-def test_create_tag():
-    test_tag_schema = CategorySchema(
+def test_create():
+    test_schema = CategorySchema(
         name="Some test tag",
         color=ColorsEnum.RED
     )
 
-    token = jwt_hasher.encode(test_tag_schema)
+    token = jwt_hasher.encode(test_schema)
     tag_repository = TagRepository(get_session())
-    tag_repository.create_tag(token)
+    tag_repository.create(token)
 
-    assert tag_repository.get_tag_by_token(token).token
+    assert tag_repository.get_by_token(token).token
 
-def test_remove_tag():
-    test_tag_schema = CategorySchema(
+def test_remove():
+    test_schema = CategorySchema(
         name="Some test tag",
         color=ColorsEnum.RED
     )
 
-    token = jwt_hasher.encode(test_tag_schema)
+    token = jwt_hasher.encode(test_schema)
     tag_repository = TagRepository(get_session())
-    tag_repository.remove_tag(token)
+    tag_repository.remove(token)
 
-    assert tag_repository.get_tag_by_token(token) is None
+    assert tag_repository.get_by_token(token) is None
 
-def test_update_tag():
-    test_tag_schema = CategorySchema(
+def test_update():
+    test_schema = CategorySchema(
         name="Some test tag",
         color=ColorsEnum.RED
     )
 
-    old_token = jwt_hasher.encode(test_tag_schema)
+    old_token = jwt_hasher.encode(test_schema)
     tag_repository = TagRepository(get_session())
 
-    tag_repository.create_tag(old_token)
+    tag_repository.create(old_token)
 
-    test_tag_schema = CategorySchema(
+    test_schema = CategorySchema(
         name="Some test tag123",
         color=ColorsEnum.RED
     )
 
-    new_token = jwt_hasher.encode(test_tag_schema)
+    new_token = jwt_hasher.encode(test_schema)
 
-    tag_repository.update_tag(old_token, new_token)
+    tag_repository.update(old_token, new_token)
 
-    assert tag_repository.get_tag_by_token(new_token).token == new_token
+    assert tag_repository.get_by_token(new_token).token == new_token

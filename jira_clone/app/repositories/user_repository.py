@@ -1,27 +1,31 @@
 from sqlalchemy.orm import Session
-from ..models import UserModel
+from typing import List, Type
 
-class UserRepository:
+from .base_repository import BaseRepository
+from ..models import UserModel, BaseModel
+
+
+class UserRepository(BaseRepository):
     def __init__(self, session: Session):
         self.session = session
 
-    def create_user(self, token: str):
-        new_user = UserModel(token=token)
-        self.session.add(new_user)
+    def create(self, token: str) -> None:
+        user = UserModel(token=token)
+        self.session.add(user)
         self.session.commit()
 
-    def remove_user(self, token: str):
-        user = self.get_user_by_token(token)
+    def remove(self, token: str) -> None:
+        user = self.get_by_token(token)
         self.session.delete(user)
         self.session.commit()
 
-    def update_user(self, old_token: str, new_token: str):
-        user = self.get_user_by_token(old_token)
+    def update(self, old_token: str, new_token: str) -> None:
+        user = self.get_by_token(old_token)
         user.token = new_token
         self.session.commit()
 
-    def get_user_by_token(self, token: str):
+    def get_by_token(self, token: str) -> BaseModel | None:
         return self.session.query(UserModel).filter_by(token=token).first()
 
-    def get_all_users(self):
+    def get_all(self) -> List[Type[BaseModel]]:
         return self.session.query(UserModel).all()
