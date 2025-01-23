@@ -34,7 +34,7 @@ def create_category(category_schema: CategorySchema, session=Depends(get_session
 
     result = category_interactor.create(category_schema)
 
-    return result if result is not None else HTTPException(status_code=404)
+    return result
 
 
 @category_router.put('/')

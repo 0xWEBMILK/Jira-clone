@@ -34,7 +34,7 @@ def create_user(user_schema: UserSchema, session=Depends(get_session_stub), hash
 
     result = user_interactor.create(user_schema)
 
-    return result if result is not None else HTTPException(status_code=404)
+    return result
 
 
 @user_router.put('/')

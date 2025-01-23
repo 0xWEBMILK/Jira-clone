@@ -34,7 +34,7 @@ def create_tag(tag_schema: TagSchema, session=Depends(get_session_stub), hasher=
 
     result = tag_interactor.create(tag_schema)
 
-    return result if result is not None else HTTPException(status_code=404)
+    return result
 
 
 @tag_router.put('/')

@@ -33,7 +33,7 @@ def create_task(task_schema: TaskSchema, session = Depends(get_session_stub), ha
 
     result = task_interactor.create(task_schema)
 
-    return result if result is not None else HTTPException(status_code=404)
+    return result
 
 @task_router.put('/')
 def update_task(old_schema: TaskSchema, new_schema: TaskSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
