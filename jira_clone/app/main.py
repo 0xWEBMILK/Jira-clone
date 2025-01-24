@@ -5,7 +5,7 @@ from fastapi import FastAPI
 import uvicorn
 
 from .auth.hashing import get_hasher_stub, JWTHasher
-from .database.database import get_session_stub, init
+from .database.database import get_session_stub
 
 from .controllers import tag_router
 from .controllers import task_router
@@ -16,7 +16,6 @@ def main():
     app = FastAPI()
     engine = create_engine('sqlite:///jira.db')
     session = sessionmaker(bind=engine)
-    init(engine)
 
     def get_session():
         with session() as s:
