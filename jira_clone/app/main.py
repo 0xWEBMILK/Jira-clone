@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from fastapi import FastAPI
 import uvicorn
 
+from .config import get_config
 from .auth.hashing import get_hasher_stub, JWTHasher
 from .database.database import get_session_stub
 
@@ -14,7 +15,14 @@ from .controllers import category_router
 
 def main():
     app = FastAPI()
-    engine = create_engine('sqlite:///jira.db')
+
+    config = get_config('./')
+
+    if config.application.dev_mode:
+        engine = create_engine(config.database.dev_url)
+    else:
+        engine = create_engine(config.database.prod_url)
+
     session = sessionmaker(bind=engine)
 
     def get_session():
