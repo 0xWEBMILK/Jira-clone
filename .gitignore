@@ -1,6 +1,6 @@
-# Project test files
+# Project files
 **.db
-
+config.ini
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

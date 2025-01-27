@@ -1,0 +1,7 @@
+[Database]
+dev_url  = sqlite:///dev.db
+prod_url = sqlite:///prod.db
+test_url = sqlite:///test.db
+
+[Application]
+dev_mode = false
