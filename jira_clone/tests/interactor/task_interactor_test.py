@@ -7,9 +7,11 @@ from jira_clone.app.repositories.task_repository import TaskRepository
 from jira_clone.app.interactors.task_interactor import TaskInteractor
 from jira_clone.app.schemas.schemas import TaskSchema
 from jira_clone.app.auth.hashing import JWTHasher
+from jira_clone.app.config import get_config
 
+config = get_config('../../')
 jwt_hasher = JWTHasher('super', 'HS256')
-DATABASE_URL = "sqlite:///test.db"
+DATABASE_URL = config.database.test_url
 
 @pytest.fixture(scope='function')
 def session():
