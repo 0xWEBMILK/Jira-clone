@@ -21,8 +21,9 @@ def session():
     session.close()
     Base.metadata.drop_all(engine)
 
-def test_create(session):
-    test_schema = UserSchema(
+@pytest.fixture
+def user_schema():
+    return UserSchema(
         first_name="some",
         last_name="user",
         username="somename",
@@ -30,51 +31,38 @@ def test_create(session):
         email="someemail@email.com",
     )
 
-    token = jwt_hasher.encode(test_schema)
+def test_create(session, user_schema):
     user_repository = UserRepository(session)
+
+    token = jwt_hasher.encode(user_schema)
     user_repository.create(token)
 
     assert user_repository.get_by_token(token).token
 
-def test_remove(session):
-    test_schema = UserSchema(
-        first_name="some",
-        last_name="user",
-        username="somename",
-        password="some_password",
-        email="someemail@email.com",
-    )
-
-    token = jwt_hasher.encode(test_schema)
+def test_remove(session, user_schema):
     user_repository = UserRepository(session)
+
+    token = jwt_hasher.encode(user_schema)
     user_repository.create(token)
 
     user_repository.remove(token)
 
     assert user_repository.get_by_token(token) is None
 
-def test_update(session):
-    test_schema = UserSchema(
-        first_name="some",
-        last_name="user",
-        username="somename",
-        password="some_password",
-        email="someemail@email.com",
-    )
-
-    old_token = jwt_hasher.encode(test_schema)
+def test_update(session, user_schema):
     user_repository = UserRepository(session)
+
+    old_token = jwt_hasher.encode(user_schema)
     user_repository.create(old_token)
 
-    test_schema = UserSchema(
+    updated_schema = UserSchema(
         first_name="some",
         last_name="user",
         username="somename",
         password="some_password123",
         email="someemail@email.com",
     )
-
-    new_token = jwt_hasher.encode(test_schema)
+    new_token = jwt_hasher.encode(updated_schema)
 
     user_repository.update(old_token, new_token)
 

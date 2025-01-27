@@ -21,8 +21,9 @@ def session():
     session.close()
     Base.metadata.drop_all(engine)
 
-def test_create(session):
-    test_schema = TaskSchema(
+@pytest.fixture
+def task_schema():
+    return TaskSchema(
         title="Some test task",
         description="Some test task description",
         creator="some_creator",
@@ -30,22 +31,15 @@ def test_create(session):
         tags=["some_tag"],
     )
 
-    token = jwt_hasher.encode(test_schema)
+def test_create(session, task_schema):
+    token = jwt_hasher.encode(task_schema)
     task_repository = TaskRepository(session)
     task_repository.create(token)
 
     assert task_repository.get_by_token(token).token
 
-def test_remove(session):
-    test_schema = TaskSchema(
-        title="Some test task",
-        description="Some test task description",
-        creator="some_creator",
-        performers=["some_performer"],
-        tags=["some_tag"],
-    )
-
-    token = jwt_hasher.encode(test_schema)
+def test_remove(session, task_schema):
+    token = jwt_hasher.encode(task_schema)
     task_repository = TaskRepository(session)
     task_repository.create(token)
 
@@ -53,28 +47,19 @@ def test_remove(session):
 
     assert task_repository.get_by_token(token) is None
 
-def test_update(session):
-    test_schema = TaskSchema(
-        title="Some test task",
-        description="Some test task description",
-        creator="some_creator",
-        performers=["some_performer"],
-        tags=["some_tag"],
-    )
-
-    old_token = jwt_hasher.encode(test_schema)
+def test_update(session, task_schema):
+    old_token = jwt_hasher.encode(task_schema)
     task_repository = TaskRepository(session)
     task_repository.create(old_token)
 
-    test_schema = TaskSchema(
+    updated_schema = TaskSchema(
         title="Some test task123",
         description="Some test task description132",
         creator="some_creator",
         performers=["some_performer"],
         tags=["some_tag"],
     )
-
-    new_token = jwt_hasher.encode(test_schema)
+    new_token = jwt_hasher.encode(updated_schema)
 
     task_repository.update(old_token, new_token)
 
