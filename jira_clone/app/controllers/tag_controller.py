@@ -8,7 +8,7 @@ from ..schemas import TagSchema
 
 tag_router = APIRouter(prefix='/tags', tags=['tags'])
 
-@tag_router.get('/')
+@tag_router.get('/', status_code=200)
 def get_all_tags(session=Depends(get_session_stub), hasher=Depends(get_hasher_stub)):
     tag_repository = TagRepository(session)
     tag_interactor = TagInteractor(tag_repository, hasher)
@@ -17,7 +17,7 @@ def get_all_tags(session=Depends(get_session_stub), hasher=Depends(get_hasher_st
 
     return result if result is not None else HTTPException(status_code=404)
 
-@tag_router.get('/{tag_token}')
+@tag_router.get('/{tag_token}', status_code=200)
 def get_tag_by_token(tag_token: str, session=Depends(get_session_stub), hasher=Depends(get_hasher_stub)):
     tag_repository = TagRepository(session)
     tag_interactor = TagInteractor(tag_repository, hasher)
@@ -27,7 +27,7 @@ def get_tag_by_token(tag_token: str, session=Depends(get_session_stub), hasher=D
     return result if result is not None else HTTPException(status_code=404)
 
 
-@tag_router.post('/')
+@tag_router.post('/', status_code=201)
 def create_tag(tag_schema: TagSchema, session=Depends(get_session_stub), hasher=Depends(get_hasher_stub)):
     tag_repository = TagRepository(session)
     tag_interactor = TagInteractor(tag_repository, hasher)
@@ -37,7 +37,7 @@ def create_tag(tag_schema: TagSchema, session=Depends(get_session_stub), hasher=
     return result
 
 
-@tag_router.put('/')
+@tag_router.put('/', status_code=201)
 def update_tag(old_schema: TagSchema, new_schema: TagSchema, session=Depends(get_session_stub),
                 hasher=Depends(get_hasher_stub)):
     tag_repository = TagRepository(session)
@@ -48,7 +48,7 @@ def update_tag(old_schema: TagSchema, new_schema: TagSchema, session=Depends(get
     return result if result is not None else HTTPException(status_code=404)
 
 
-@tag_router.delete('/')
+@tag_router.delete('/', status_code=200)
 def delete_tag(tag_schema: TagSchema, session=Depends(get_session_stub), hasher=Depends(get_hasher_stub)):
     tag_repository = TagRepository(session)
     tag_interactor = TagInteractor(tag_repository, hasher)

@@ -8,7 +8,7 @@ from ..schemas import TaskSchema
 
 task_router = APIRouter(prefix='/tasks', tags=['tasks'])
 
-@task_router.get('/')
+@task_router.get('/', status_code=200)
 def get_all_tasks(session=Depends(get_session_stub), hasher=Depends(get_hasher_stub)):
     task_repository = TaskRepository(session)
     task_interactor = TaskInteractor(task_repository, hasher)
@@ -17,7 +17,7 @@ def get_all_tasks(session=Depends(get_session_stub), hasher=Depends(get_hasher_s
 
     return result if result is not None else HTTPException(status_code=404)
 
-@task_router.get('/{task_token}')
+@task_router.get('/{task_token}', status_code=200)
 def get_task_by_token(task_token: str, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     task_repository = TaskRepository(session)
     task_interactor = TaskInteractor(task_repository, hasher)
@@ -26,7 +26,7 @@ def get_task_by_token(task_token: str, session = Depends(get_session_stub), hash
 
     return result if result is not None else HTTPException(status_code=404)
 
-@task_router.post('/')
+@task_router.post('/', status_code=201)
 def create_task(task_schema: TaskSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     task_repository = TaskRepository(session)
     task_interactor = TaskInteractor(task_repository, hasher)
@@ -35,7 +35,7 @@ def create_task(task_schema: TaskSchema, session = Depends(get_session_stub), ha
 
     return result
 
-@task_router.put('/')
+@task_router.put('/', status_code=201)
 def update_task(old_schema: TaskSchema, new_schema: TaskSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     task_repository = TaskRepository(session)
     task_interactor = TaskInteractor(task_repository, hasher)
@@ -44,7 +44,7 @@ def update_task(old_schema: TaskSchema, new_schema: TaskSchema, session = Depend
 
     return result if result is not None else HTTPException(status_code=404)
 
-@task_router.delete('/')
+@task_router.delete('/', status_code=200)
 def delete_task(task_schema: TaskSchema, session = Depends(get_session_stub), hasher = Depends(get_hasher_stub)):
     task_repository = TaskRepository(session)
     task_interactor = TaskInteractor(task_repository, hasher)

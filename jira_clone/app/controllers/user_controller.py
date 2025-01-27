@@ -8,7 +8,7 @@ from ..schemas import UserSchema
 
 user_router = APIRouter(prefix='/users', tags=['users'])
 
-@user_router.get('/')
+@user_router.get('/', status_code=200)
 def get_all_users(session=Depends(get_session_stub), hasher=Depends(get_hasher_stub)):
     user_repository = UserRepository(session)
     user_interactor = UserInteractor(user_repository, hasher)
@@ -17,7 +17,7 @@ def get_all_users(session=Depends(get_session_stub), hasher=Depends(get_hasher_s
 
     return result if result is not None else HTTPException(status_code=404)
 
-@user_router.get('/{user_token}')
+@user_router.get('/{user_token}', status_code=200)
 def get_user_by_token(user_token: str, session=Depends(get_session_stub), hasher=Depends(get_hasher_stub)):
     user_repository = UserRepository(session)
     user_interactor = UserInteractor(user_repository, hasher)
@@ -27,7 +27,7 @@ def get_user_by_token(user_token: str, session=Depends(get_session_stub), hasher
     return result if result is not None else HTTPException(status_code=404)
 
 
-@user_router.post('/')
+@user_router.post('/', status_code=201)
 def create_user(user_schema: UserSchema, session=Depends(get_session_stub), hasher=Depends(get_hasher_stub)):
     user_repository = UserRepository(session)
     user_interactor = UserInteractor(user_repository, hasher)
@@ -37,7 +37,7 @@ def create_user(user_schema: UserSchema, session=Depends(get_session_stub), hash
     return result
 
 
-@user_router.put('/')
+@user_router.put('/', status_code=201)
 def update_user(old_schema: UserSchema, new_schema: UserSchema, session=Depends(get_session_stub),
                 hasher=Depends(get_hasher_stub)):
     user_repository = UserRepository(session)
@@ -48,7 +48,7 @@ def update_user(old_schema: UserSchema, new_schema: UserSchema, session=Depends(
     return result if result is not None else HTTPException(status_code=404)
 
 
-@user_router.delete('/')
+@user_router.delete('/', status_code=200)
 def delete_user(user_schema: UserSchema, session=Depends(get_session_stub), hasher=Depends(get_hasher_stub)):
     user_repository = UserRepository(session)
     user_interactor = UserInteractor(user_repository, hasher)

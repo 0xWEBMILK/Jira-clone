@@ -1,29 +1,31 @@
+import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
 from jira_clone.app.database.database import Base
 from jira_clone.app.repositories.category_repository import CategoryRepository
 from jira_clone.app.interactors.category_interactor import CategoryInteractor
-
 from jira_clone.app.schemas.schemas import CategorySchema
 from jira_clone.app.auth.hashing import JWTHasher
 
 jwt_hasher = JWTHasher('super', 'HS256')
+DATABASE_URL = "sqlite:///test.db"
 
-engine = create_engine('sqlite:///test.db')
-session = sessionmaker(bind=engine)
-Base.metadata.create_all(engine)
+@pytest.fixture(scope='function')
+def session():
+    engine = create_engine(DATABASE_URL)
+    Base.metadata.create_all(engine)
 
-def get_session():
-    with session() as conn:
-        try:
-            return conn
-        except Exception as e:
-            conn.rollback()
-            raise e
+    Session = sessionmaker(bind=engine)
+    session = Session()
 
-def test_create_category():
-    category_repository = CategoryRepository(get_session())
+    yield session
+
+    session.close()
+    Base.metadata.drop_all(engine)
+
+
+def test_create_category(session):
+    category_repository = CategoryRepository(session)
     category_interactor = CategoryInteractor(category_repository, jwt_hasher)
 
     category_schema = CategorySchema(
@@ -31,12 +33,12 @@ def test_create_category():
         color='red'
     )
 
-    token = category_interactor.create_category(category_schema)
+    token = category_interactor.create(category_schema)
 
-    assert category_interactor.get_category_by_token(token) is not None
+    assert category_interactor.get_by_token(token) is not None
 
-def test_remove_category():
-    category_repository = CategoryRepository(get_session())
+def test_remove_category(session):
+    category_repository = CategoryRepository(session)
     category_interactor = CategoryInteractor(category_repository, jwt_hasher)
 
     category_schema = CategorySchema(
@@ -44,12 +46,12 @@ def test_remove_category():
         color='red'
     )
 
-    token = category_interactor.remove_category(category_schema)
+    token = category_interactor.remove(category_schema)
 
-    assert category_interactor.get_category_by_token(token) is None
+    assert category_interactor.get_by_token(token) is None
 
-def test_update_category():
-    category_repository = CategoryRepository(get_session())
+def test_update_category(session):
+    category_repository = CategoryRepository(session)
     category_interactor = CategoryInteractor(category_repository, jwt_hasher)
 
     old_category_schema = CategorySchema(
@@ -62,7 +64,7 @@ def test_update_category():
         color='blue'
     )
 
-    category_interactor.create_category(old_category_schema)
-    token = category_interactor.update_category(old_category_schema, new_category_schema)
+    category_interactor.create(old_category_schema)
+    token = category_interactor.update(old_category_schema, new_category_schema)
 
     assert token is not None
