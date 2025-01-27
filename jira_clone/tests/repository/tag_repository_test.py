@@ -5,19 +5,20 @@ from jira_clone.app.database.database import Base
 from jira_clone.app.repositories.tag_repository import TagRepository
 from jira_clone.app.schemas.schemas import CategorySchema, ColorsEnum
 from jira_clone.app.auth.hashing import JWTHasher
+from jira_clone.app.config import get_config
 
+config = get_config('../../')
 jwt_hasher = JWTHasher('super', 'HS256')
-DATABASE_URL = 'sqlite:///test.db'
+DATABASE_URL = config.database.test_url
 
 @pytest.fixture(scope='function')
 def session():
     engine = create_engine(DATABASE_URL)
-    Session = sessionmaker(bind=engine)
     Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine)
     session = Session()
-
     yield session
-
+    session.rollback()
     session.close()
     Base.metadata.drop_all(engine)
 
