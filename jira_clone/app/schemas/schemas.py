@@ -27,6 +27,7 @@ class TaskSchema(BaseModel):
 
     creator: str
     performers: list
+    category: str
     tags: list
 
 
