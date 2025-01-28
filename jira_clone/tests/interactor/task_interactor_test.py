@@ -31,6 +31,7 @@ def test_create_task(session):
         title='Test Task',
         description='Test Task Description',
         performers=['Some guy'],
+        category='Category 1',
         tags=['Some tag'],
         creator='Some guy',
     )
@@ -47,6 +48,7 @@ def test_remove_task(session):
         title='Test Task',
         description='Test Task Description',
         performers=['Some guy'],
+        category='Category 1',
         tags=['Some tag'],
         creator='Some guy',
     )
@@ -63,6 +65,7 @@ def test_update_task(session):
         title='Test Task',
         description='Test Task Description',
         performers=['Some guy'],
+        category='Category 1',
         tags=['Some tag'],
         creator='Some guy',
     )
@@ -71,6 +74,7 @@ def test_update_task(session):
         title='Test Task123',
         description='Test Task Description123',
         performers=['Some guy'],
+        category='Category 2',
         tags=['Some tag'],
         creator='Some guy',
     )

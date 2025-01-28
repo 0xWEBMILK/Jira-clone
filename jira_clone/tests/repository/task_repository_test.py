@@ -28,6 +28,7 @@ def task_schema():
         description="Some test task description",
         creator="some_creator",
         performers=["some_performer"],
+        category='Category 1',
         tags=["some_tag"],
     )
 
@@ -57,6 +58,7 @@ def test_update(session, task_schema):
         description="Some test task description132",
         creator="some_creator",
         performers=["some_performer"],
+        category='Category 2',
         tags=["some_tag"],
     )
     new_token = jwt_hasher.encode(updated_schema)
