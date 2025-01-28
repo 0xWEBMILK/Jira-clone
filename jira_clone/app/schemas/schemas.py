@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from typing import List
 from enum import Enum
 
 class ColorsEnum(str, Enum):
@@ -26,9 +27,9 @@ class TaskSchema(BaseModel):
     description: str
 
     creator: str
-    performers: list
+    performers: List[str]
     category: str
-    tags: list
+    tags: List[str]
 
 
 class TagSchema(BaseModel):
