@@ -19,10 +19,11 @@ def main():
     config = get_config('./')
 
     if config.application.dev_mode:
-        engine = create_engine(config.database.dev_url)
+        database_url = config.database.dev_url
     else:
-        engine = create_engine(config.database.prod_url)
+        database_url = config.database.prod_url
 
+    engine = create_engine(database_url)
     session = sessionmaker(bind=engine)
 
     def get_session():
